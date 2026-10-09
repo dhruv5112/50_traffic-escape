@@ -3,6 +3,7 @@ import random
 from game.player import Player,LANE_W
 from game.traffic import Car,make_car
 from game.raft import Raft,RIVER_TOP,RIVER_BOTTOM
+from game.high_scores import HighScores
 
 LANES=8
 WIDTH=LANES*LANE_W
@@ -18,9 +19,12 @@ class GameEngine:
         self.clock=pygame.time.Clock()
         self.font=pygame.font.SysFont("monospace",24,bold=True)
         self.big_font=pygame.font.SysFont("monospace",44,bold=True)
+        self.high_scores=HighScores()
         self.reset()
 
     def reset(self):
+        if hasattr(self,"score"): self.save_score()
+        self.score_saved=False
         self.player=Player(WIDTH//2,HEIGHT-80)
         self.cars=[]
         self.rafts=[Raft(x) for x in (-160,100,360,620)]
@@ -75,11 +79,19 @@ class GameEngine:
         if self.score%300==0: self.speed=min(10,self.speed+0.5)
         if self.player.rect.top<=10:
             self.won=True
+            self.score+=1000
+            self.save_score()
+
+    def save_score(self):
+        if not self.score_saved:
+            self.high_scores.add(self.score//10)
+            self.score_saved=True
 
     def lose_life(self):
         self.lives-=1
         if self.lives==0:
             self.game_over=True
+            self.save_score()
         else:
             self.player=Player(WIDTH//2,HEIGHT-80)
             self.invulnerable=90
@@ -110,6 +122,10 @@ class GameEngine:
             self._msg("CRASHED!",(220,60,60))
         if self.won:
             self._msg("YOU MADE IT!",(80,220,80))
+        table="TOP 5: "+" / ".join(str(n) for n in self.high_scores.scores)
+        self.screen.blit(self.font.render(table,True,(255,230,130)),(8,HEIGHT-32))
+        if self.high_scores.error:
+            self.screen.blit(self.font.render(self.high_scores.error,True,(255,120,120)),(8,HEIGHT-58))
         pygame.display.flip()
 
     def _msg(self,text,color):
@@ -128,4 +144,5 @@ class GameEngine:
             self.update()
             self.draw()
             self.clock.tick(FPS)
+        self.save_score()
         pygame.quit()
