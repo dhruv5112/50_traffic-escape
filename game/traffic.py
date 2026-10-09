@@ -19,7 +19,15 @@ class Car:
     def off_screen(self,height):
         return self.rect.top>height+100 or self.rect.bottom<-100
 
-    def draw(self,screen):
+    def draw(self,screen,night=False):
+        if night:
+            beam=pygame.Surface(screen.get_size(),pygame.SRCALPHA)
+            front=self.rect.bottom if self.direction==1 else self.rect.top
+            ahead=front+self.direction*170
+            pygame.draw.polygon(beam,(255,244,165,55),[(self.rect.left+8,front),(self.rect.right-8,front),(self.rect.right+35,ahead),(self.rect.left-35,ahead)])
+            screen.blit(beam,(0,0))
+            for x in (self.rect.left+12,self.rect.right-12):
+                pygame.draw.circle(screen,(255,250,200),(x,front),5)
         pygame.draw.rect(screen,self.color,self.rect,border_radius=8)
         pygame.draw.rect(screen,(180,220,240),pygame.Rect(self.rect.x+8,self.rect.y+10,44,22),border_radius=4)
         for wx in [self.rect.x+6,self.rect.right-16]:

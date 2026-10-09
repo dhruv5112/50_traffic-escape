@@ -33,6 +33,8 @@ class GameEngine:
         self.spawn_interval=50
         self.speed=3
         self.score=0
+        self.elapsed_frames=0
+        self.night=False
         self.lives=3
         self.invulnerable=0
         self.game_over=False
@@ -46,6 +48,8 @@ class GameEngine:
 
     def update(self):
         if self.game_over or self.won: return
+        self.elapsed_frames+=1
+        self.night=(self.elapsed_frames//(30*FPS))%2==1
         keys=pygame.key.get_pressed()
         self.player.move(keys,0,WIDTH)
         self.invulnerable=max(0,self.invulnerable-1)
@@ -98,7 +102,7 @@ class GameEngine:
             self.raft_x=float(self.player.rect.x)
 
     def draw(self):
-        self.screen.fill(BG)
+        self.screen.fill((24,27,42) if self.night else BG)
         # road markings
         for i in range(LANES+1):
             pygame.draw.line(self.screen,(100,100,100),(i*LANE_W,0),(i*LANE_W,HEIGHT),2)
@@ -108,7 +112,7 @@ class GameEngine:
         # sidewalks
         pygame.draw.rect(self.screen,(150,130,110),pygame.Rect(0,HEIGHT-50,WIDTH,50))
         pygame.draw.rect(self.screen,(150,130,110),pygame.Rect(0,0,WIDTH,30))
-        for c in self.cars: c.draw(self.screen)
+        for c in self.cars: c.draw(self.screen,self.night)
         pygame.draw.rect(self.screen,(35,113,166),(0,RIVER_TOP,WIDTH,RIVER_BOTTOM-RIVER_TOP))
         for raft in self.rafts: raft.draw(self.screen)
         label=self.font.render("RIVER: ride a raft!",True,(240,245,255))
@@ -116,7 +120,7 @@ class GameEngine:
         self.player.draw(self.screen)
         hud=pygame.Rect(0,0,WIDTH,30)
         pygame.draw.rect(self.screen,(20,20,20),hud)
-        s=self.font.render(f"Score: {self.score//10}  Lives: {self.lives}  R=Restart",True,(220,220,220))
+        s=self.font.render(f"Score: {self.score//10}  Lives: {self.lives}  {'NIGHT' if self.night else 'DAY'}  R=Restart",True,(220,220,220))
         self.screen.blit(s,(6,4))
         if self.game_over:
             self._msg("CRASHED!",(220,60,60))
