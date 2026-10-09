@@ -88,7 +88,7 @@ Seven tests cover boundary movement, three collisions and restart, respawn prote
 
 - `videos/before.mp4`: A 10-second continuous gameplay recording of the original starter game, demonstrating the off-screen bottom movement bug and instant game over on car collision (no lives system).
 - `videos/after.mp4`: A 10-second continuous gameplay recording of the updated game, demonstrating all 4 completed tasks: boundary safety, the 3-lives system with flashing respawn invulnerability, riding the river raft to safely cross, nighttime transition with directional headlights, and victory.
-- `Chat_History.pdf`: An exported 4-iteration Vibe Coding prompt history transcript documenting the iterative prompting process used by Dhruv U Rajesh to fix bugs, implement each task modularly, write tests, and verify deliverables.
+- `Chat_History.pdf`: An exported 4-iteration Vibe Coding prompt history transcript documenting the iterative prompting process used by Dhruv U to fix bugs, implement each task modularly, write tests, and verify deliverables.
 
 
 Each numbered task has its own commit. `traffic-escape.bundle` preserves the original and changed commits for import into a personal repository. `changes.patch` preserves the same commit sequence as mail patches.
