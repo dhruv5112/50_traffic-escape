@@ -1,6 +1,14 @@
-# Traffic Escape
+# Traffic Escape — Lab 4: Vibe Coding
 
-Cross 8 lanes of oncoming traffic to reach the other side (Frogger-style).
+**Student Name:** Dhruv U  
+**SRN:** PES2UG24AM054  
+**Department:** Computer Science and Engineering, PES University  
+**Course:** Software Engineering Lab (UE24CS252AA2)  
+**Assigned Repository:** [SETAPESU26/50_traffic-escape](https://github.com/SETAPESU26/50_traffic-escape)  
+**Personal Repository:** [dhruv5112/50_traffic-escape](https://github.com/dhruv5112/50_traffic-escape)  
+
+---
+
 
 ## Setup
 
