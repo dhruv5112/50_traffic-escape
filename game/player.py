@@ -9,7 +9,7 @@ class Player:
         self.color=(60,160,220)
         self.move_cooldown=0
 
-    def move(self, keys, min_x, max_x):
+    def move(self, keys, min_x, max_x, max_y=600):
         if self.move_cooldown>0:
             self.move_cooldown-=1
             return
@@ -19,7 +19,7 @@ class Player:
         if keys[pygame.K_UP] or keys[pygame.K_w]: dy=-8
         if keys[pygame.K_DOWN] or keys[pygame.K_s]: dy=8
         nx=max(min_x,min(max_x-self.rect.width,self.rect.x+dx))
-        ny=max(0,self.rect.y+dy)
+        ny=max(0,min(max_y-self.rect.height,self.rect.y+dy))
         if dx: self.rect.x=nx; self.move_cooldown=12
         if dy: self.rect.y=ny
 

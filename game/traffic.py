@@ -9,10 +9,12 @@ class Car:
         self.rect=pygame.Rect(lane_x+10,y,60,80)
         self.direction=direction  # 1=down, -1=up
         self.speed=speed
+        self.y=float(y)
         self.color=random.choice(COLORS)
 
     def update(self):
-        self.rect.y+=self.direction*self.speed
+        self.y+=self.direction*self.speed
+        self.rect.y=round(self.y)
 
     def off_screen(self,height):
         return self.rect.top>height+100 or self.rect.bottom<-100

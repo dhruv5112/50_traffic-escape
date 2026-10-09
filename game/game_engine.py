@@ -47,7 +47,7 @@ class GameEngine:
             self.spawn_interval=max(22,self.spawn_interval-0.2)
         for c in self.cars:
             c.update()
-            if c.rect.colliderect(self.player.rect):
+            if self.player.rect.bottom<HEIGHT-50 and c.rect.colliderect(self.player.rect):
                 self.game_over=True
         self.cars=[c for c in self.cars if not c.off_screen(HEIGHT)]
         self.score+=1
