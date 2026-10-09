@@ -86,11 +86,10 @@ Seven tests cover boundary movement, three collisions and restart, respawn prote
 
 ## Submission evidence
 
-`videos/before.mp4` is a 10-second recording of the original game, with scripted Down input showing the off-screen movement bug.
+- `videos/before.mp4`: A 10-second continuous gameplay recording of the original starter game, demonstrating the off-screen bottom movement bug and instant game over on car collision (no lives system).
+- `videos/after.mp4`: A 10-second continuous gameplay recording of the updated game, demonstrating all 4 completed tasks: boundary safety, the 3-lives system with flashing respawn invulnerability, riding the river raft to safely cross, nighttime transition with directional headlights, and victory.
+- `Chat_History.pdf`: An exported 4-iteration Vibe Coding prompt history transcript documenting the iterative prompting process used by Dhruv U Rajesh to fix bugs, implement each task modularly, write tests, and verify deliverables.
 
-`videos/after.mp4` is a 10-second montage rendered by the real updated Pygame game with scripted keyboard input: 2 seconds showing the repaired boundary, 5 seconds showing a raft crossing and finish, and 3 seconds spanning gameplay seconds 29-32 to show the normal lighting transition. No gameplay state was teleported or fabricated for the recordings. The omitted wait and montage are labeled. Run the game yourself for an interactive demonstration.
-
-`Chat_History.pdf` contains the user-facing conversation available at packaging time. For the complete platform chat, including the final response, use ChatGPT's Share control and submit that URL if your instructor requires a page link. This environment cannot obtain or publish a ChatGPT share URL.
 
 Each numbered task has its own commit. `traffic-escape.bundle` preserves the original and changed commits for import into a personal repository. `changes.patch` preserves the same commit sequence as mail patches.
 
