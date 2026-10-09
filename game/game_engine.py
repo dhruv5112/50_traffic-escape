@@ -12,14 +12,14 @@ FPS=60
 BG=(60,60,60)
 
 class GameEngine:
-    def __init__(self):
+    def __init__(self,score_path=None):
         pygame.init()
         self.screen=pygame.display.set_mode((WIDTH,HEIGHT))
         pygame.display.set_caption("Traffic Escape")
         self.clock=pygame.time.Clock()
-        self.font=pygame.font.SysFont("monospace",24,bold=True)
+        self.font=pygame.font.SysFont("monospace",18,bold=True)
         self.big_font=pygame.font.SysFont("monospace",44,bold=True)
-        self.high_scores=HighScores()
+        self.high_scores=HighScores(score_path)
         self.reset()
 
     def reset(self):
@@ -33,7 +33,7 @@ class GameEngine:
         self.spawn_interval=50
         self.speed=3
         self.score=0
-        self.elapsed_frames=0
+        self.elapsed_seconds=0.0
         self.night=False
         self.lives=3
         self.invulnerable=0
@@ -46,10 +46,10 @@ class GameEngine:
             if event.type==pygame.KEYDOWN and event.key==pygame.K_r: self.reset()
         return True
 
-    def update(self):
+    def update(self,dt=1/FPS):
         if self.game_over or self.won: return
-        self.elapsed_frames+=1
-        self.night=(self.elapsed_frames//(30*FPS))%2==1
+        self.elapsed_seconds+=dt
+        self.night=int((self.elapsed_seconds+1e-9)//30)%2==1
         keys=pygame.key.get_pressed()
         self.player.move(keys,0,WIDTH)
         self.invulnerable=max(0,self.invulnerable-1)
@@ -79,6 +79,7 @@ class GameEngine:
                 self.lose_life()
                 break
         self.cars=[c for c in self.cars if not c.off_screen(HEIGHT)]
+        if self.game_over: return
         self.score+=1
         if self.score%300==0: self.speed=min(10,self.speed+0.5)
         if self.player.rect.top<=10:
@@ -117,7 +118,8 @@ class GameEngine:
         for raft in self.rafts: raft.draw(self.screen)
         label=self.font.render("RIVER: ride a raft!",True,(240,245,255))
         self.screen.blit(label,(8,RIVER_TOP+4))
-        self.player.draw(self.screen)
+        if self.invulnerable==0 or self.invulnerable%12<6:
+            self.player.draw(self.screen)
         hud=pygame.Rect(0,0,WIDTH,30)
         pygame.draw.rect(self.screen,(20,20,20),hud)
         s=self.font.render(f"Score: {self.score//10}  Lives: {self.lives}  {'NIGHT' if self.night else 'DAY'}  R=Restart",True,(220,220,220))
@@ -144,9 +146,10 @@ class GameEngine:
     def run(self):
         running=True
         while running:
+            dt=self.clock.tick(FPS)/1000
             running=self.handle_events()
-            self.update()
+            if not running: break
+            self.update(dt)
             self.draw()
-            self.clock.tick(FPS)
         self.save_score()
         pygame.quit()
