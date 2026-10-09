@@ -2,3 +2,4 @@ __pycache__/
 *.pyc
 high_scores.json
 .venv/
+.DS_Store

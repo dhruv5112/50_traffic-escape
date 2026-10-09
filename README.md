@@ -44,21 +44,28 @@ python main.py
 traffic-escape/
 ├── main.py
 ├── requirements.txt
+├── Chat_History.pdf
 ├── game/
 │   ├── __init__.py
 │   ├── game_engine.py
+│   ├── high_scores.py
 │   ├── player.py
+│   ├── raft.py
 │   └── traffic.py
+├── tests/
+│   └── test_game.py
+├── videos/
+│   ├── before.mp4
+│   └── after.mp4
 └── README.md
 ```
 
 ## Submission Checklist
 
-Submission is only the following three things:
+- [x] A 10-second video of gameplay **before** your changes, showing the bug/broken behavior (`videos/before.mp4`)
+- [x] A 10-second video of gameplay **after** your changes, showing the bug fixed and the new features working (`videos/after.mp4`)
+- [x] Chat history exported as a PDF (`Chat_History.pdf`)
 
-- [] A 10-second video of gameplay **before** your changes, showing the bug/broken behavior
-- [] A 10-second video of gameplay **after** your changes, showing the bug fixed and the new features working
-- [] The Chat/LLM used page link, with the complete chat history
 
 
 ## Completed Lab 4 features
