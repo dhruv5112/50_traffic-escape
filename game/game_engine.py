@@ -2,6 +2,7 @@ import pygame
 import random
 from game.player import Player,LANE_W
 from game.traffic import Car,make_car
+from game.raft import Raft,RIVER_TOP,RIVER_BOTTOM
 
 LANES=8
 WIDTH=LANES*LANE_W
@@ -22,6 +23,8 @@ class GameEngine:
     def reset(self):
         self.player=Player(WIDTH//2,HEIGHT-80)
         self.cars=[]
+        self.rafts=[Raft(x) for x in (-160,100,360,620)]
+        self.raft_x=float(self.player.rect.x)
         self.timer=0
         self.spawn_interval=50
         self.speed=3
@@ -42,6 +45,20 @@ class GameEngine:
         keys=pygame.key.get_pressed()
         self.player.move(keys,0,WIDTH)
         self.invulnerable=max(0,self.invulnerable-1)
+        for raft in self.rafts:
+            raft.update(WIDTH)
+        on_river=RIVER_TOP<=self.player.rect.centery<RIVER_BOTTOM
+        if on_river:
+            raft=next((r for r in self.rafts if r.rect.left<=self.player.rect.centerx<r.rect.right),None)
+            if raft is None:
+                self.lose_life()
+            else:
+                if abs(self.raft_x-self.player.rect.x)>2: self.raft_x=float(self.player.rect.x)
+                self.raft_x+=raft.speed
+                self.player.rect.x=round(self.raft_x)
+                if self.player.rect.left<0 or self.player.rect.right>WIDTH: self.lose_life()
+        else:
+            self.raft_x=float(self.player.rect.x)
         self.timer+=1
         if self.timer>=self.spawn_interval:
             lane=random.randint(0,LANES-1)
@@ -50,7 +67,7 @@ class GameEngine:
             self.spawn_interval=max(22,self.spawn_interval-0.2)
         for c in self.cars:
             c.update()
-            if self.invulnerable==0 and self.player.rect.bottom<HEIGHT-50 and c.rect.colliderect(self.player.rect):
+            if self.invulnerable==0 and not (RIVER_TOP<=self.player.rect.centery<RIVER_BOTTOM) and self.player.rect.bottom<HEIGHT-50 and c.rect.colliderect(self.player.rect):
                 self.lose_life()
                 break
         self.cars=[c for c in self.cars if not c.off_screen(HEIGHT)]
@@ -66,6 +83,7 @@ class GameEngine:
         else:
             self.player=Player(WIDTH//2,HEIGHT-80)
             self.invulnerable=90
+            self.raft_x=float(self.player.rect.x)
 
     def draw(self):
         self.screen.fill(BG)
@@ -79,6 +97,10 @@ class GameEngine:
         pygame.draw.rect(self.screen,(150,130,110),pygame.Rect(0,HEIGHT-50,WIDTH,50))
         pygame.draw.rect(self.screen,(150,130,110),pygame.Rect(0,0,WIDTH,30))
         for c in self.cars: c.draw(self.screen)
+        pygame.draw.rect(self.screen,(35,113,166),(0,RIVER_TOP,WIDTH,RIVER_BOTTOM-RIVER_TOP))
+        for raft in self.rafts: raft.draw(self.screen)
+        label=self.font.render("RIVER: ride a raft!",True,(240,245,255))
+        self.screen.blit(label,(8,RIVER_TOP+4))
         self.player.draw(self.screen)
         hud=pygame.Rect(0,0,WIDTH,30)
         pygame.draw.rect(self.screen,(20,20,20),hud)
